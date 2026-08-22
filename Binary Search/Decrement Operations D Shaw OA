@@ -1,0 +1,161 @@
+//https://ideone.com/ZkWWew
+
+# 27. Decrement Operations
+
+## Problem Statement
+
+Given an array `arr` of `n` integers, you need to choose an integer `x` and perform operations using `x`.
+
+In each operation, you may decrease **any one element** of the array by `x`.
+
+The goal is to make **all elements of the array non-positive**, i.e., less than or equal to `0`.
+
+Given the array `arr` and another integer `max_moves`, find the **minimum possible integer `x`** such that all the elements of the array can be made non-positive in **at most `max_moves` operations**.
+
+---
+
+## Example
+
+**Input**
+
+```text
+n = 3
+arr = [1, 2, 3]
+max_moves = 4
+```
+
+### Explanation
+
+- If `x = 1`, each operation decreases an element by `1`. It takes a total of **6 operations** to make all elements non-positive, which exceeds `max_moves`.
+
+- If `x = 2`:
+
+| Operation | Array |
+|----------|----------------|
+| Initial | `[1, 2, 3]` |
+| 1 | `[-1, 2, 3]` |
+| 2 | `[-1, 0, 3]` |
+| 3 | `[-1, 0, 1]` |
+| 4 | `[-1, 0, -1]` |
+
+Hence, the minimum possible decrement is:
+
+```text
+Answer = 2
+```
+
+---
+
+## Function Description
+
+Complete the function `getMinDecrement`.
+
+### Parameters
+
+- `int arr[n]` : Array of integers.
+- `int max_moves` : Maximum number of operations allowed.
+
+### Returns
+
+- `int` : The minimum possible integer `x`.
+
+---
+
+## Constraints
+
+```text
+1 ≤ n ≤ 10^5
+1 ≤ arr[i] ≤ 10^9
+n ≤ max_moves ≤ 10^9
+```
+
+---
+
+## Input Format
+
+```text
+n
+arr[0]
+arr[1]
+...
+arr[n-1]
+max_moves
+```
+
+---
+
+## Sample Input 0
+
+```text
+4
+4
+3
+2
+7
+5
+```
+
+### Corresponding Input
+
+```text
+arr = [4, 3, 2, 7]
+max_moves = 5
+```
+
+### Sample Output
+
+```text
+4
+```
+
+### Explanation
+
+| x | Total Operations |
+|---|------------------|
+| 1 | 16 |
+| 2 | 9 |
+| 3 | 7 |
+| 4 | 5 |
+
+Since `x = 4` is the smallest value that requires at most `5` operations, the answer is:
+
+```text
+4
+```
+
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main() {
+	// your code goes here
+	int n, max_moves;
+	cin >> n >> max_moves;
+ 
+	vector<int> arr(n);
+	int high = 0, low = 1;
+	for(int i = 0; i < n; i++) {
+		cin >> arr[i];
+		high = max(high, arr[i]);
+	}
+	int x = 0;
+ 
+	while(low <= high) {
+		int mid = low + (high-low)/2;
+ 
+		int cnt = 0;
+		for(int i = 0; i < n; i++) {
+			if(arr[i] % mid == 0) cnt += (arr[i]/mid);
+			else cnt += (arr[i]/mid + 1);
+		}
+ 
+		if(cnt <= max_moves) {
+			x = mid;
+			high = mid-1;
+		}
+		else low = mid+1;
+	}
+ 
+	cout << x << "\n";
+ 
+	return 0;
+}
