@@ -1,0 +1,58 @@
+// Question 1:
+// Given an array of integers, a and a max score m . Score of a subsequence [a[i1], a[i2] ... a[ik]] is defined as i1 * k + a[i1] + i2 * k + a[i2] + ... + ik * k + a[ik]. Now, find the length of largest subsequence whose score <= m.
+// Example:
+// Input: n = 4, a = [4, 3, 2, 1], max score = 33.
+// Output: 3
+// Optimal Subsequence Indexes: [1, 2, 4]. As, score is (1 * 3 + 4) + (2 * 3 + 3) + (4 * 3 + 1) = 29 <= 33
+// Constriants:
+
+// 1 <= n <= 2e5
+// 1 <= a[i] <= 10000
+// 1 <= max score <= 1e15
+// It is guarenteed that at least one of the elements of the array is less than max score.
+
+// Find the length of longest subset such that if the size of that subset is K then :- 
+
+// i1*k + a[i1] + …………………………………….. ik*k + a[ik] <= m . 
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int n;
+	long long max_score;
+	cin >> n >> max_score;
+	
+	vector<int> arr(n+1);
+	int low = 0, high = n;
+	for(int i = 1; i <= n; i++) {
+		cin >> arr[i];
+	}
+	int ans = 0;
+	
+	while(low <= high) {
+		int mid = low + (high-low)/2;
+		
+		multiset<long long> st;
+		int cnt = 0;
+		long long score = 0;
+		for(int i = 1; i <= n; i++) st.insert(1LL*i*mid + arr[i]);
+		for(auto it : st) {
+			score += (1LL * it);
+			if(score <= max_score) cnt++;
+			else break;
+		}
+		
+		if(cnt >= mid) {
+			ans = mid;
+			low = mid+1;
+		}
+		else high = mid-1;
+	}
+	
+	cout << ans << "\n";
+	
+	return 0;
+}
