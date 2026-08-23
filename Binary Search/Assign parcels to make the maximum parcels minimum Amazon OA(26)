@@ -1,0 +1,81 @@
+https://ideone.com/7DXBO9
+/*
+To be efficient, Amazon must optimally distribute parcels among their delivery agents.
+Initially, there are n agents, and the number of parcels assigned to the i-th agent is parcels[i].
+There are extra_parcels that also need to be shipped. The extra parcels should be assigned
+such that the maximum number of parcels assigned to any one agent is minimized.
+
+Given an integer array, parcels, and an integer, extra_parcels, find the minimum possible
+value of the maximum number of parcels any agent must deliver.
+
+Example:
+Suppose n = 5, parcels = [7, 5, 1, 9, 1] and extra_parcels = 25.
+
+An optimal assignment is shown:
+-----------------------------------------
+| Parcels | Extra Parcels | Total Parcels|
+-----------------------------------------
+|    7    |       3       |      10      |
+|    5    |       4       |       9      |
+|    1    |       9       |      10      |
+|    9    |       1       |      10      |
+|    1    |       8       |       9      |
+-----------------------------------------
+
+Sample Case 0:
+STDIN           FUNCTION
+-----           --------
+3            -> parcels[] size n = 3
+1            -> parcels = [1, 2, 3]
+2
+3
+3            -> extra_parcels = 3
+
+Sample Output:
+3
+
+Explanation:
+It is optimal to assign 2 extra parcels to the first agent and 1 extra parcel to the second agent.
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+bool check(vector<int>& parcels, long long mid, long long remParcels) {
+	for(int i = 0; i < parcels.size(); i++) {
+		if(parcels[i] <= mid) remParcels -= (mid-parcels[i]);
+		else return false;
+		
+		if(remParcels <= 0) return true;;
+	}
+	
+	return (remParcels <= 0);
+}
+int main() {
+	// your code goes here
+	int n;
+	long long extra_parcels;
+	cin >> n >> extra_parcels;
+	
+	long long low = 0, high = 0;
+	vector<int> parcels(n);
+	for(int i = 0; i < n; i++) {
+		cin >> parcels[i];
+		low = max(low, 1LL * parcels[i]);
+		high = max(high, 1LL*parcels[i] + extra_parcels);
+	}
+	long long ans = 0;
+	
+	while(low <= high) {
+		long long mid = low + (high-low)/2;
+		
+		if(check(parcels, mid, extra_parcels)) {
+			ans = mid;
+			high = mid-1;
+		}
+		else low = mid+1;
+	}
+	
+	cout << ans << "\n";
+	
+	return 0;
+}
