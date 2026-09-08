@@ -1,0 +1,86 @@
+https://ideone.com/GfxZbm
+/*
+
+Eat the Chocolates
+
+Shaktimaan has N chocolates in total. On the first day, he is allowed to eat max 1
+chocolate. If he eats x chocolates on a given day, he can eat x, x+1 or x-1 chocolates
+on the next day. On the last day, he can't eat more than 1 chocolate. Help Shaktimaan
+by calculating the minimum number of days in which he can eat N chocolates.
+
+Input Format
+The first line contains an integer T (1 <= T <= 1000) denoting the number of test cases.
+Each of the next T lines contains an integer N (1 <= N <= 10^9).
+
+Output Format
+Output T lines. On each line output the minimum number of days for each test case.
+
+Understanding :-> Given N chocolates ; eat them in min possible days. At first day max 1 chocolate you can eat ; in last day also max 1 chocolate you can eat ; and each consecutive day you can eat same chocolates as previous or 1 less or 1 more.
+
+Observation :-> We can use a constructive algorithm. The maximum chocolates that can be eaten in G days is obtained by increasing the chocolates by 1 every day till the middle and then decreasing by 1 every day.
+
+For Even G:
+1 2 3 ... G/2 G/2 ... 3 2 1
+
+Total = (G/2) * (G/2 + 1)
+
+For Odd G:
+1 2 3 ... G/2 G/2+1 G/2 ... 3 2 1
+
+Total = Sum(G/2) + Sum(G/2 + 1)
+
+Since the maximum chocolates possible in G days is monotonic, we can binary search on the answer.
+
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+
+	int t;
+	cin >> t;
+
+	while(t--) {
+
+		long long n;
+		cin >> n;
+
+		long long low = 0, high = n;
+		long long ans = 0;
+
+		while(low <= high) {
+
+			long long mid = low + (high - low) / 2;
+
+			long long chocolates = 0;
+
+			if(mid % 2 == 0) {
+				chocolates = (mid / 2) * (mid / 2 + 1);
+			}
+			else {
+
+				long long V = mid / 2;
+				long long Y = mid / 2 + 1;
+
+				long long G1 = V * (V + 1) / 2; // Sum till V
+				long long G2 = Y * (Y + 1) / 2; // Sum till Y
+
+				chocolates = G1 + G2;
+			}
+
+			if(chocolates >= n) {
+				ans = mid;
+				high = mid - 1;
+			}
+			else {
+				low = mid + 1;
+			}
+		}
+
+		cout << ans << "\n";
+	}
+
+	return 0;
+}
