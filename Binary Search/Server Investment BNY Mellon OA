@@ -1,0 +1,63 @@
+https://ideone.com/n3bfuv
+
+/*
+3. Server Investment
+
+A network security administrator must protect networks at a number of locations from cyber-attacks. Initially, the i-th network has num_servers[i] servers, and money[i] funds allocated for security upgrades. To upgrade a server in the i-th network, it costs upgrade[i]. Selling a server adds sell[i] to available funds.
+
+Given the arrays num_servers, money, upgrade, and sell, each with n integers, determine the maximum number of servers that can be upgraded to ensure optimal network security. The result should be an array of n integers, where the i-th integer represents the maximum number of upgraded servers for the i-th network system.
+
+---
+
+Example:
+Given:
+num_servers = [4, 3]
+money = [8, 9]
+sell = [4, 2]
+upgrade = [4, 5]
+
+| System | Description | Number of upgraded servers |
+| :--- | :--- | :--- |
+| 1st | A server can be sold at a cost of 4 and upgraded at a cost of 4. If one server is sold... | There can be 3 upgraded servers |
+| 2nd | One server can be sold for a cost of 2 amounting to total money of 11 units which can be used to upgrade both of the remaining servers at a cost of 10 units | There can be 2 upgraded servers |
+
+Hence the answer is [3, 2].
+
+Understanding :- We are given 4 arrays of size “N”. We have to solve for each index separately and we have to output “N” integers. 
+
+1st Observation.-> If you sell some houses; then for sure you will be able to upgrade the rest of the houses in more number because you have more money 
+
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int n;
+	cin >> n;
+	
+	vector<int> num_servers(n), money(n), sell(n), upgrade(n);
+	for(int j = 0; j < n; j++) cin >> num_servers[j];
+	for(int j = 0; j < n; j++) cin >> money[j];
+	for(int j = 0; j < n; j++) cin >> sell[j];
+	for(int j = 0; j < n; j++) cin >> upgrade[j];
+	
+	for(int i = 0; i < n; i++) {
+		int low = 0, high = num_servers[i]; //no.s of servers removed
+		int ans = 0;
+		while(low <= high) {
+			int mid = low + (high-low)/2;
+			
+			if((num_servers[i]-mid)*upgrade[i] <= (mid*sell[i] + money[i])) {
+				ans = mid;
+				high = mid-1;
+			}
+			else low = mid+1;
+		}
+		num_servers[i] -= ans;
+	}
+	
+	for(int i = 0; i < n; i++) cout << num_servers[i] << " ";
+	
+	return 0;
+}
