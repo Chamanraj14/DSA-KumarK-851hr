@@ -1,0 +1,104 @@
+https://ideone.com/RJVP04
+/*
+	Job Scheduling
+ * Problem Statement:
+ * There are m jobs to schedule on n processors. A schedule is balanced 
+ * if the difference between the number of jobs scheduled on any two 
+ * neighboring processors does not exceed 1.
+ * 
+ * The k-th processor is the most efficient, and thus, the maximum 
+ * number of jobs should be scheduled on that processor. Find the 
+ * maximum number of jobs that can be scheduled on the k-th processor, 
+ * such that the overall schedule remains balanced.
+ * 
+ * Note: Each processor must have at least one job scheduled.
+ *
+ * Example:
+ * Consider n = 5, m = 11, k = 3.
+ * Consider the following job schedules:
+ * 
+ * +-----------------+--------------+---------------------------------+
+ * | Schedule        | Is balanced? | Jobs scheduled on k-th processor|
+ * +-----------------+--------------+---------------------------------+
+ * | [1, 2, 3, 4, 1] | No           | --                              |
+ * | [1, 2, 3, 3, 2] | Yes          | 3                               |
+ * | [2, 2, 2, 2, 3] | Yes          | 2                               |
+ * | [2, 2, 3, 2, 2] | Yes          | 3                               |
+ * | [1, 1, 7, 1, 1] | No           | --                              |
+ * | [4, 3, 2, 1, 1] | Yes          | 2                               |
+ * +-----------------+--------------+---------------------------------+
+ *
+ * Function Description:
+ * Complete the function getMaximumJobs in the editor below.
+ * 
+ * getMaximumJobs has the following parameters:
+ *   - int n: the number of processors
+ *   - int m: the number of jobs
+ *   - int k: the 1-based index of the most efficient processor
+ * 
+ * Returns:
+ *   - int: the maximum number of jobs that can be scheduled on the k-th
+ *          processor maintaining a balanced schedule.
+ * 
+ * Constraints:
+ *    1 <= n <= 10^5
+ *    n <= m <= 10^9
+ *    1 <= k <= n
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+bool check(int n, int k, long long m, long long mid) {
+	long long lowest = mid;
+	long long current = mid - 1;
+	
+	// Calculate minimum jobs required on the right side
+	for(int i = k + 1; i <= n; i++) {
+		lowest += max(1LL, current);
+		current--;
+	}
+	
+	current = mid - 1;
+	
+	// Calculate minimum jobs required on the left side
+	for(int i = k - 1; i >= 1; i--) {
+		lowest += max(1LL, current);
+		current--;
+	}
+	
+	// If minimum required jobs are greater than m,
+	// then mid jobs cannot be assigned to k-th processor
+	if(lowest > m) return false;
+	
+	return true;
+}
+
+int main() {
+	// your code goes here
+	int n, k;
+	long long m;
+	
+	cin >> n >> m >> k;
+	
+	long long low = 1, high = m;
+	long long ans = 1;
+	
+	while(low <= high) {
+		long long mid = low + (high-low)/2;
+		
+		// If mid is possible, try for a larger value
+		if(check(n, k, m, mid)) {
+			ans = mid;
+			low = mid+1;
+		}
+		// If mid is not possible, try a smaller value
+		else {
+			high = mid-1;
+		}
+	}
+	
+	cout << ans << "\n";
+	
+	return 0;
+}
