@@ -1,0 +1,35 @@
+https://ideone.com/n9vGzQ
+/*
+Understanding -> You are given two sorted arrays ; both arrays were of size N ;  you have to find a pair of numbers such that sum of those numbers <=x and as close as possible to x 
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int n, x;
+	cin >> n >> x;
+	
+	vector<int> arr1(n), arr2(n);
+	for(int i = 0; i < n; i++) cin >> arr1[i];
+	for(int i = 0; i < n; i++) cin >> arr2[i];
+	
+	int i = 0, j = n-1;
+	long long ans = 0, absDiff = INT_MAX;
+	
+	while(i < n && j >= 0) {
+		long long sum = arr1[i] + arr2[j];
+		
+		if(sum <= x && abs(sum-x) < absDiff) {
+			ans = sum;
+			absDiff = abs(sum-x);
+		}
+		
+		if(sum > x) j--;
+		else i++;
+	}
+	
+	cout << ans << "\n";
+	
+	return 0;
+}
